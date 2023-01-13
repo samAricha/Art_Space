@@ -47,30 +47,36 @@ fun DefaultPreview() {
 @Composable
 fun ArtSpace(modifier: Modifier = Modifier){
     var counterNum by remember {
-        mutableStateOf(1)
+        mutableStateOf(0)
     }
     val imageResource = when(counterNum){
+        0 -> R.drawable.female1
         1 -> R.drawable.male1
         2 -> R.drawable.male2
         3 -> R.drawable.male3
-        else -> R.drawable.male4
-
+        4 -> R.drawable.male4
+        5 -> R.drawable.female2
+        6 -> R.drawable.female3
+        else -> R.drawable.female4
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally){
-        Image(painter = painterResource(id = imageResource), contentDescription = "")
+        Image(painter = painterResource(id = imageResource), contentDescription = "", modifier.padding(32.dp))
         Spacer(modifier = modifier.height(16.dp))
         Text(text = counterNum.toString())
         Spacer(modifier = modifier.width(16.dp))
         Text(text = "Sarufi 001")
         Text(text = "2020")
         modifier.height(16.dp)
-        Row() {
-            Button(onClick = { counterNum = counterRegulator(false, counterNum) }, modifier.width(120.dp)) {
+        
+        //buttons for navigating
+        Row(modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center) {
+            Button(onClick = { counterNum = counterRegulator(false, currentCounter = counterNum) }, modifier.width(120.dp)) {
                 Text(stringResource(id = R.string.previous_btn))
             }
             Spacer(modifier = modifier.width(16.dp))
-            Button(onClick = { counterNum = counterRegulator(true, counterNum) }, modifier.width(120.dp)) {
+            Button(onClick = { counterNum = counterRegulator(true, currentCounter = counterNum) }, modifier.width(120.dp)) {
                 Text(stringResource(id = R.string.next_btn))
             }
         }
@@ -78,11 +84,11 @@ fun ArtSpace(modifier: Modifier = Modifier){
 }
 
 fun counterRegulator(next: Boolean, currentCounter: Int): Int{
-    var returnValue: Int = 0
-    if(next){
-       returnValue++
-    }else{
-        returnValue--
-    }
-    return returnValue
+    var update = currentCounter
+     if(next && update <= 7){
+         update++
+     }else if(!next && update >= 0){
+        update--
+     }
+    return update
 }
